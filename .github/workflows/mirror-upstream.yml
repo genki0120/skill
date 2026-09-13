@@ -23,8 +23,8 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: chore: mirror nextlevelbuilder/ui-ux-pro-max-skill
-          title: Mirror UI UX Pro Max upstream snapshot
-          body: Mirror the current upstream main snapshot into this repository.
+          commit-message: "chore: mirror nextlevelbuilder/ui-ux-pro-max-skill"
+          title: "Mirror UI UX Pro Max upstream snapshot"
+          body: "Mirror the current upstream main snapshot into this repository."
           branch: mirror/upstream
           delete-branch: true
