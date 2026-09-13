@@ -5,6 +5,7 @@ on:
     branches: [main]
 permissions:
   contents: write
+  pull-requests: write
 jobs:
   mirror:
     runs-on: ubuntu-latest
@@ -12,10 +13,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Mirror upstream
+      - name: Prepare upstream snapshot
+        shell: bash
         run: |
+          set -euo pipefail
           git clone --depth 1 https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git /tmp/upstream
-          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -a /tmp/upstream/. .
-          rm -rf .git
-        working-directory: /tmp/placeholder
+          rsync -a --delete --exclude='.git/' /tmp/upstream/ ./
+      - name: Create mirror pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: chore: mirror nextlevelbuilder/ui-ux-pro-max-skill
+          title: Mirror UI UX Pro Max upstream snapshot
+          body: Mirror the current upstream main snapshot into this repository.
+          branch: mirror/upstream
+          delete-branch: true
